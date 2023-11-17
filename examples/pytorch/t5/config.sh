@@ -6,6 +6,9 @@ nvidia-docker run -dti --name ft-t5 --restart=always --gpus all --network=host \
 --shm-size 5g nvcr.io/nvidia/pytorch:22.09-py3 bash
 docker exec -it ft-t5 bash
 
+nvidia-docker run -dti --name ft-bert --restart=always --gpus all --network=host \
+--shm-size 5g ft bash
+
 python3 ../examples/pytorch/t5/utils/huggingface_t5_ckpt_convert.py \
         -saved_dir /workspace/uie-ft-fp16 \
         -in_file /workspace/cpt_latest \
@@ -17,6 +20,7 @@ python3 ../examples/pytorch/t5/uie.py  \
         --hf_model_location /workspace/cpt_latest \
         --test_ft
 
+# dockers commit 容器名 要保存成的镜像名：版本名
 
 docker run -it --gpus all -p 8900:8900 --name trt-action --shm-size 32G --ulimit memlock=-1 --ulimit stack=67108864 -v /opt/data02/zhan/trt:/work nvcr.io/nvidia/pytorch:23.04-py3 /bin/bash
 

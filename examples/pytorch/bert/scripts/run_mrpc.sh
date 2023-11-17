@@ -25,7 +25,7 @@ if [ "$2" != "fp32" ] && [ "$2" != "fp16" ] && [ "$2" != "bf16" ]; then
     exit 1
 fi
 
-batch_size=8
+batch_size=512
 seq_len=128
 
 MAIN_PATH=$PWD
@@ -37,6 +37,7 @@ mkdir -p $MAIN_PATH/pytorch/bert_mrpc/output
 cd $MAIN_PATH/pytorch/bert_mrpc/data
 if [ ! -f "dev.tsv" ]; then
     python $MAIN_PATH/../examples/pytorch/bert/utils/get_mrpc_data.py --data_dir $MAIN_PATH/pytorch/bert_mrpc/data
+    mv msr_paraphrase_test.txt dev.tsv
 fi
 
 cd $MAIN_PATH/pytorch/bert_mrpc/models/bert-base-cased-finetuned-mrpc
@@ -76,3 +77,4 @@ python $MAIN_PATH/../examples/pytorch/bert/run_glue.py \
     --per_gpu_eval_batch_size ${batch_size} \
     --model_type $1 \
     --data_type $2 \
+    --remove_padding
